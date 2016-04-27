@@ -83,5 +83,132 @@ describe Totango::Event do
     end
   end
 
-end
+  describe "with user properties set" do
+    subject {
+      described_class.new({
+        :service_id => "SP-xxxxyy",
+        :account_id => "u12214",
+        :account_name => "Barksdale+Industries",
+        :user_properties => { name: 'Bark', type: 'Dog' }
+      })
+    }
 
+    describe "#query_options" do
+      it "builds a query hash for a Totango pixel URL" do
+        expect( subject.query_options ).to eq({
+          :sdr_s => "SP-xxxxyy",
+          :sdr_o => "u12214",
+          :sdr_odn => "Barksdale+Industries",
+          "sdr_u.name" => "Bark",
+          "sdr_u.type" => "Dog"
+        })
+      end
+    end
+
+    describe "#to_url" do
+      it "builds a Totango pixel URL" do
+        url = URI.parse( subject.to_url )
+
+        expect( url.host ).to eq( 'sdr.totango.com' )
+        expect( url.path ).to eq( "/pixel.gif/" )
+
+        query_options = Hash[URI.decode_www_form(url.query)]
+        expect( query_options ).to eq({
+          "sdr_s" => "SP-xxxxyy",
+          "sdr_o" => "u12214",
+          "sdr_odn" => "Barksdale+Industries",
+          "sdr_u.name" => "Bark",
+          "sdr_u.type" => "Dog"
+        })
+      end
+    end
+  end
+
+  describe "with account properties set" do
+    subject {
+      described_class.new({
+        :service_id => "SP-xxxxyy",
+        :account_id => "u12214",
+        :account_name => "Barksdale+Industries",
+        :account_properties => { name: 'Bark', type: 'Dog' }
+      })
+    }
+
+    describe "#query_options" do
+      it "builds a query hash for a Totango pixel URL" do
+        expect( subject.query_options ).to eq({
+          :sdr_s => "SP-xxxxyy",
+          :sdr_o => "u12214",
+          :sdr_odn => "Barksdale+Industries",
+          "sdr_o.name" => "Bark",
+          "sdr_o.type" => "Dog"
+        })
+      end
+    end
+
+    describe "#to_url" do
+      it "builds a Totango pixel URL" do
+        url = URI.parse( subject.to_url )
+
+        expect( url.host ).to eq( 'sdr.totango.com' )
+        expect( url.path ).to eq( "/pixel.gif/" )
+
+        query_options = Hash[URI.decode_www_form(url.query)]
+        expect( query_options ).to eq({
+          "sdr_s" => "SP-xxxxyy",
+          "sdr_o" => "u12214",
+          "sdr_odn" => "Barksdale+Industries",
+          "sdr_o.name" => "Bark",
+          "sdr_o.type" => "Dog"
+        })
+      end
+    end
+  end
+
+  describe "with account and user properties set" do
+    subject {
+      described_class.new({
+        :service_id => "SP-xxxxyy",
+        :account_id => "u12214",
+        :account_name => "Barksdale+Industries",
+        :account_properties => { name: 'Bark', type: 'Dog' },
+        :user_properties => { name: 'Bark', type: 'Dog' }
+      })
+    }
+
+    describe "#query_options" do
+      it "builds a query hash for a Totango pixel URL" do
+        expect( subject.query_options ).to eq({
+          :sdr_s => "SP-xxxxyy",
+          :sdr_o => "u12214",
+          :sdr_odn => "Barksdale+Industries",
+          "sdr_o.name" => "Bark",
+          "sdr_o.type" => "Dog",
+          "sdr_u.name" => "Bark",
+          "sdr_u.type" => "Dog"
+        })
+      end
+    end
+
+    describe "#to_url" do
+      it "builds a Totango pixel URL" do
+        url = URI.parse( subject.to_url )
+
+        expect( url.host ).to eq( 'sdr.totango.com' )
+        expect( url.path ).to eq( "/pixel.gif/" )
+
+        query_options = Hash[URI.decode_www_form(url.query)]
+        expect( query_options ).to eq({
+          "sdr_s" => "SP-xxxxyy",
+          "sdr_o" => "u12214",
+          "sdr_odn" => "Barksdale+Industries",
+          "sdr_o.name" => "Bark",
+          "sdr_o.type" => "Dog",
+          "sdr_u.name" => "Bark",
+          "sdr_u.type" => "Dog"
+        })
+      end
+    end
+  end
+
+end
