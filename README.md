@@ -39,6 +39,8 @@ Totango.track({
   :account_name => account_name, # A human readable name for the account (will be used on Totango’s UI and reports)
   :activity => activity, # Name of the activity the user performed
   :module => module, # Name of the module the user is using within the application
+  :user_properties => {name: 'John Henry', age: '18'}, # Arbitrary hash of properties to send along with the user data
+  :account_properties => {size: 'large', type: 'Enterprise'}, # Arbitrary hash of properties to send along with the account data
 })
 ```
 
